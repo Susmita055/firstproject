@@ -4,6 +4,18 @@
 
 </head>
 <body>
+    {% for post in posts %}
+    <article>
+
+        <h2><a href="#">{{post.title}}</a></h2>
+        <p>{{post.text}}</p>
+        <time>published date: {{post.published_date}}</time>
+    </article>
+           
+           
+       </article>
+    {% endfor %}
+       
     <header>
         <h1>My Blog Posts</h1>
     </header>
