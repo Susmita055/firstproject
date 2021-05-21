@@ -1,18 +1,35 @@
 
-from django.shortcuts import render,redirect, get_object_or_404
-from django.http import HttpResponse
 from django.utils import timezone
+
+from django.http import HttpResponse
 from .models import Post
-from .forms import PostForm
+from django import forms
+from .forms import PostForm, DocumentForm
+from django.shortcuts import redirect, render, get_list_or_404
+from django.core.paginator import Paginator , PageNotAnInteger
 # Create your views here.
+#def post_list(request):
+   # return render(request,'post_list.html', {})
+    
 def post_list(request):
-    return render(request,'post_list.html', {})
-def post_list(request):
-    posts= Post.objects.all()
-    return render(request, 'post_list.html',{'posts': posts})
+    posts = Post.objects.all()
+    paginator = Paginator(posts, 3)
+    print(paginator.num_pages)
+    page = request.GET.get('page')
+    try:
+        posts = paginator.page(page)
+        print(posts)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    return render(request, 'post_list.html', {'page':page, 'posts':posts})
+
+
+#def post_list(request):
+ #   posts= Post.objects.all()
+   # return render(request, 'post_list.html',{'posts': posts})
 
 def post_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+    post=Post.objects.get(pk=pk)
     return render(request, 'post_detail.html', {'post':post})
 
 def post_new(request):
@@ -20,7 +37,7 @@ def post_new(request):
         form = PostForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
-            post.author = request.user
+            post.author =request. user
             post.published_date = timezone.now()
             post.save()
             return redirect('post_list')
@@ -30,9 +47,20 @@ def post_new(request):
 
 
 
+
 def home(request):
     return HttpResponse("HELLO!!!")
 
 def index(request):
     return render(request, 'index.html', {})
 
+def upload(request):
+    if request.method =='POST':
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('post_list')
+
+    else:
+        form = DocumentForm()
+    return render(request, 'form_upload.html',{'form': form})
