@@ -18,5 +18,9 @@ class Document(models.Model):
     title = models.CharField(max_length=200)
     document = models.FileField(upload_to='images/')
     uploaded_at = models.DateTimeField(default=timezone.now)
+
+    
+
+
     
 

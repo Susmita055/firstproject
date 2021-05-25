@@ -64,3 +64,21 @@ def upload(request):
     else:
         form = DocumentForm()
     return render(request, 'form_upload.html',{'form': form})
+
+
+from firstproject.settings import EMAIL_HOST_USER
+from django.core.mail import send_mail
+from .forms import Subscribe
+
+
+def subscribe(request):
+    sub = Subscribe()
+    if request.method == 'POST':
+        sub = Subscribe(request.POST)
+        subject = 'Welcome to Achievers Group'
+        message = 'You are viewing demo'
+        recepient = str(sub['Email'].value())
+        print(recepient)
+        send_mail(subject,message,EMAIL_HOST_USER,[recepient], fail_silently = False)
+        return render(request,'success.html',{'recepient': recepient})
+    return render(request, 'email.html', {'form':sub})

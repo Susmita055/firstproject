@@ -9,5 +9,6 @@ urlpatterns = [
     path('post_list/', views.post_list, name='post_list'),
     #path('post/new/post/', views.post_list, name='post_list'),
     path('title_upload', views.upload, name='upload'),
+    path('email/', views.subscribe, name='submit')
 ]
 
