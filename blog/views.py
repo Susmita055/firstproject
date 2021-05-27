@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.http import HttpResponse
 from .models import Post
 from django import forms
-from .forms import PostForm, DocumentForm
+from .forms import PostForm, DocumentForm, CommentForm
 from django.shortcuts import redirect, render, get_list_or_404
 from django.core.paginator import Paginator , PageNotAnInteger
 # Create your views here.
@@ -30,7 +30,21 @@ def post_list(request):
 
 def post_detail(request, pk):
     post=Post.objects.get(pk=pk)
-    return render(request, 'post_detail.html', {'post':post})
+    comments = post.comments.filter(active=True)
+    new_comment = None
+
+    #Comment posted
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.post= post
+            new_comment.save()
+
+    else:
+        comment_form = CommentForm()
+
+    return render(request, 'post_detail.html', {'post':post, 'comments': comments, 'new_comment':new_comment,'comment_form':comment_form})
 
 def post_new(request):
     if request.method == "POST":

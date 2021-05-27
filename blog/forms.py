@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import FieldDoesNotExist
 from django.db.models import fields
 from django.forms.models import model_to_dict
-from .models import Document, Post
+from .models import Document, Post, Comment
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -25,4 +25,7 @@ class Subscribe(forms.Form):
         return self.Email
 
 
-    
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('name','email','body')
