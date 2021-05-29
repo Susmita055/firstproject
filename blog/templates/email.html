@@ -9,7 +9,7 @@
         <h1 class = 'alert alert-success'>Subscribe Form</h1>
         <h3 class="p-3 mb-2 bg-primary text-white" style = 'font-size: 50px;'>Achiever's Django Program
     </h3>
-    <form method="POST">
+    <form method="POST" action="">
         <!-- Very Important csrf Token -->
         {% csrf_token %}
         <div class = "form-group">
@@ -19,6 +19,7 @@
             <br>
             <input type="submit" name="Subscribe" class = 'btn btn-primary btn-lg'>
                 </div>
+               
             </form>
         </center>
 </body>

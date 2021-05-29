@@ -1,8 +1,9 @@
 
+from django.core.exceptions import RequestAborted
 from django.utils import timezone
 
 from django.http import HttpResponse
-from .models import Post
+from .models import Post,form
 from django import forms
 from .forms import PostForm, DocumentForm, CommentForm
 from django.shortcuts import redirect, render, get_list_or_404
@@ -81,9 +82,9 @@ def upload(request):
 
 
 from firstproject.settings import EMAIL_HOST_USER
-from django.core.mail import send_mail
+from django.core.mail import send_mail, send_mass_mail
 from .forms import Subscribe
-
+from django.core.mail import EmailMessage
 
 def subscribe(request):
     sub = Subscribe()
@@ -91,8 +92,65 @@ def subscribe(request):
         sub = Subscribe(request.POST)
         subject = 'Welcome to Achievers Group'
         message = 'You are viewing demo'
-        recepient = str(sub['Email'].value())
+        recepient = str(sub['email'].value())
         print(recepient)
         send_mail(subject,message,EMAIL_HOST_USER,[recepient], fail_silently = False)
+        if sub.is_valid():
+            name=sub.cleaned_data['name']
+            email=sub.cleaned_data['email']
+        
+            #print(name)
+            #print(email)
+            
+            form1=form(email=email, name=name)
+            form1.save()
         return render(request,'success.html',{'recepient': recepient})
     return render(request, 'email.html', {'form':sub})
+
+
+def fetch(request):
+    sub = Subscribe()
+    if request.method == 'POST':
+        sub = Subscribe(request.POST)
+        if sub.is_valid():
+            name=sub.cleaned_data['name']
+            email=sub.cleaned_data['email']
+            form1=form(email=email,name=name)
+            form1.save()
+
+    
+    return render(request,'email.html',{'form':sub})
+
+
+
+def mass_mail(request):
+    sub = Subscribe()
+    if request.method == 'POST':
+        sub = Subscribe(request.POST)
+        subject = 'Welcome to Achievers Group'
+        message = 'You are viewing demo'
+        recepient = str(sub['email'].value())
+        print(recepient)
+        msg1=('subject','Please Join. Our class is running',EMAIL_HOST_USER,[recepient])
+        msg2=('subject','Thank you!!!!!!',EMAIL_HOST_USER,[recepient])
+        
+
+        send_mass_mail((msg1,msg2), fail_silently = False)
+        return render(request,'success.html',{'recepient': recepient})
+    return render(request, 'email.html', {'form':sub})
+
+def attach(request):
+    sub = Subscribe()
+    if request.method == 'POST':
+        sub = Subscribe(request.POST)
+        subject = 'Welcome to Achievers Group'
+        message = 'You are viewing demo'
+        recepient = str(sub['email'].value())
+        print(recepient)
+        email=EmailMessage(subject,message,EMAIL_HOST_USER,[recepient])
+        email.attach_file('C:/Users/DELL/Documents/0-02-03-be5b9e829571a1a0b3ab695a511a01caa30e40b7d8adac72fb48e4595454914a_eda6c1bc.jpg')
+        email.send()
+        return render(request,'success.html',{'recepient': recepient})
+    return render(request, 'email.html', {'form':sub})
+
+

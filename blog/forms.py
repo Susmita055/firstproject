@@ -19,10 +19,10 @@ class DocumentForm(forms.ModelForm):
 
 
 class Subscribe(forms.Form):
-    Email = forms.EmailField()
-
+    email = forms.EmailField()
+    name=forms. CharField(max_length=30)
     def __str__(self):
-        return self.Email
+        return self.email
 
 
 class CommentForm(forms.ModelForm):
