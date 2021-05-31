@@ -153,4 +153,7 @@ def attach(request):
         return render(request,'success.html',{'recepient': recepient})
     return render(request, 'email.html', {'form':sub})
 
+def home(request):
+    return render(request,'home.html')
+
 

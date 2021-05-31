@@ -13,9 +13,7 @@ urlpatterns = [
     path('fetch/',views.fetch, name='save'),
     path('mass/',views.mass_mail, name='save'),
     path('attach/',views.attach, name='save'),
-    
-    
-
+    path('home/',views.home, name='save'),
 ]
 
 
